@@ -1,0 +1,126 @@
+{% extends "home.html" %}
+
+{% block title %}Add Payment | Client Monitoring System{% endblock %}
+
+{% block content %}
+  <style>
+    .form-container {
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .form-row label {
+      flex: 1;
+      font-weight: bold;
+    }
+
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      flex: 2;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-buttons {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .form-buttons button {
+      padding: 10px 20px;
+      border: none;
+      margin-right: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .cancel-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  </style>
+
+  <div class="form-container">
+    <form action="" method="post">
+  {% csrf_token %}
+  <h2>{% if edit_mode %}Edit Payment{% else %}Add Payment{% endif %}</h2>
+
+  <div class="form-row">
+    <label for="client">Client Name:</label>
+    <select id="client" name="client" required>
+      <option value="">-- Select Client --</option>
+      {% for client in clients %}
+        <option value="{{ client.id }}" {% if edit_mode and client.id == payment.client.id %}selected{% endif %}>{{ client.client_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="payment_mode">Payment Mode:</label>
+    <select id="payment_mode" name="payment_mode" required>
+      <option value="">-- Select Payment Mode --</option>
+      <option value="Cash" {% if edit_mode and payment.payment_mode == "Cash" %}selected{% endif %}>Cash</option>
+      <option value="UPI" {% if edit_mode and payment.payment_mode == "UPI" %}selected{% endif %}>UPI</option>
+      <option value="Bank Transfer" {% if edit_mode and payment.payment_mode == "Bank Transfer" %}selected{% endif %}>Bank Transfer</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="paid_on">Paid On:</label>
+    <input type="date" id="paid_on" name="paid_on" required value="{% if edit_mode %}{{ payment.paid_on|date:'Y-m-d' }}{% endif %}">
+  </div>
+
+  <div class="form-row">
+    <label for="amount">Amount Paid (₹):</label>
+    <input type="number" id="amount" name="amount" min="0" step="0.01" required value="{% if edit_mode %}{{ payment.paid_amount }}{% endif %}">
+  </div>
+
+  <div class="form-row">
+    <label for="paid_to">Paid To:</label>
+    <input type="text" id="paid_to" name="paid_to" required value="{% if edit_mode %}{{ payment.paid_to }}{% endif %}">
+  </div>
+
+  <div class="form-row">
+    <label for="transaction_id">Transaction ID:</label>
+    <input type="text" id="transaction_id" name="transaction_id" required value="{% if edit_mode %}{{ payment.transaction_id }}{% endif %}">
+  </div>
+
+  <div class="form-row">
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="3">{% if edit_mode %}{{ payment.description }}{% endif %}</textarea>
+  </div>
+
+  <div class="form-buttons">
+    <button type="submit" class="submit-btn">Submit</button>
+    <button type="button" class="cancel-btn" onclick='document.location.href="/clientapp/allpayments"'>Cancel</button>
+  </div>
+</form>
+
+  </div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "home.html" %}
+{% block title %}All Clients {% endblock %}
+{% block content %}
+  <h2>All Clients</h2>
+  <form method="get" style="text-align: center; margin-bottom: 20px;">
+  <input type="text" name="search" placeholder="Search by Client Name" value="{{ search }}" style="padding: 5px; width: 250px;">
+  <button type="submit" style="padding: 5px 10px;">Search</button>
+</form>
+  <table border="1" cellpadding="8" cellspacing="1" align="center" width="105%">
+    <thead style="background-color:orange">
+      <tr>
+		<th>ID</th>
+        <th>Client Name</th>
+        <th>Contact Name</th>
+        <th>Code</th>
+        <th>Contact Number</th>
+        <th>Branches</th>
+        <th>View Branches</th>
+		<th>View College</th>
+        <th>Payment Type</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for client in clients %}
+      <tr>
+		<td>{{ forloop.counter }}</td>
+        <td>{{ client.client_name }}</td>
+        <td>{{ client.contact_name }}</td>
+        <td>{{ client.client_code }}</td>
+        <td>{{ client.contact_number }}</td>
+        <td>{{ client.has_branches }}</td>
+        <td>
+          {% if client.url %}
+            <a href="{{ client.url }}" target="_blank">open branches</a>
+          {% else %}
+            N/A
+          {% endif %}
+        </td>
+		<td>
+          {% if client.additional_link %}
+            <a href="{{ client.additional_link }}" target="_blank">open</a>
+          {% else %}
+            N/A
+          {% endif %}
+        </td>		
+		
+        <td>{{ client.payment_type }}</td>
+        <td>
+          <a href="{% url 'edit_client' client.id %}"><button type="button">Edit</button></a>
+        </td>
+        <td>
+          <form action="{% url 'delete_client' client.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Are you sure you want to delete this client?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <br><br>
+  <center>
+    <a href="{% url 'Homepage' %}"><button type="button">Back</button></a>
+  </center>
+{% endblock %}

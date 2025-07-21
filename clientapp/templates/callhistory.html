@@ -1,0 +1,70 @@
+{% extends "home.html" %}
+
+{% block title %}Call History{% endblock %}
+
+{% block content %}
+  <h2 style="text-align: center; margin-top: 40px;">Support Call History</h2>
+  <div style="text-align: center; margin: 20px;">
+    <a href="{% url 'callhistory' %}?status=Pending">
+      <button type="button">Pending</button>
+    </a>
+    <a href="{% url 'callhistory' %}?status=Closed">
+      <button type="button">Closed</button>
+    </a>
+    <a href="{% url 'callhistory' %}">
+      <button type="button">All</button>
+    </a>
+  </div>
+  {% if calls %}
+    <table border="1" cellpadding="8" cellspacing="1" align="center" width="95%">
+    <thead style="background-color:orange">
+        <tr>
+          <th>ID</th>
+          <th>Client</th>
+          <th>Subject</th>
+          <th>Reported By</th>
+          <th>Date</th>
+          <th>Responded By</th>
+          <th>Status</th>
+          <th>Time (hrs)</th>
+          <th>Solved By</th>
+          <th>Description</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for call in calls %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ call.client_name }}</td>
+          <td>{{ call.subject }}</td>
+          <td>{{ call.reported_by }}</td>
+          <td>{{ call.date }}</td>
+          <td>{{ call.responded_by }}</td>
+          <td>{{ call.status }}</td>
+          <td>{{ call.time_taken|default:"-" }}</td>
+          <td>{{ call.solved_by|default:"-" }}</td>
+          <td>{{ call.description|default:"-" }}</td>
+          <td>
+            <a href="{% url 'edit_call' call.id %}"><button type="button">Edit</button></a>
+          </td>
+          <td>
+            <form method="post" action="{% url 'delete_call' call.id %}" style="display:inline;" onsubmit="return confirm('Delete this call?');">
+              {% csrf_token %}
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p style="text-align:center; margin-top: 30px; color:gray;">No call records found.</p>
+  {% endif %}
+
+  <br><br>
+  <center>
+    <a href="{% url 'Homepage' %}"><button type="button">Back</button></a>
+  </center>
+{% endblock %}

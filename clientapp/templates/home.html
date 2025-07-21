@@ -1,0 +1,106 @@
+{% load static %}
+{% load django_bootstrap5 %}
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{% block pagetitle %}My Django Project{% endblock %}</title>
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  <style>
+    .top-logo {
+      text-align: center;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+    .top-logo img {
+      height: 80px; 
+    }
+    .custom-navbar {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-logo">
+  <img src="{% static 'images/899.png' %}" alt="Client Monitoring System Logo">
+</div>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark custom-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'Homepage' %}">🏡 Home</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+
+        {% if request.session.role in "employee admin superadmin" %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown">👨🏻‍💻 Clients</a>
+          <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/clientapp/addclients/">Add Client</a></li>
+              <li><a class="dropdown-item" href="/clientapp/allclients/">All Clients</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown">🏫 Branches</a>
+          <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/clientapp/addbranch/">Add Branch</a></li>
+              <li><a class="dropdown-item" href="/clientapp/allbranches/">All Branches</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown">📞 Support Calls</a>
+          <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/clientapp/addcall/">Add Call</a></li>
+              <li><a class="dropdown-item" href="/clientapp/callhistory/">Call History</a></li>
+          </ul>
+        </li>
+        {% endif %}
+
+        {% if request.session.role in "admin superadmin" %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown">💸 Payments</a>
+          <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/clientapp/addpayments/">Add Payment</a></li>
+              <li><a class="dropdown-item" href="/clientapp/allpayments/">All Payments</a></li>
+          </ul>
+        </li>
+        {% endif %}
+
+        {% if request.session.role == "superadmin" %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown">👥 Users</a>
+          <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/clientapp/adduser/">Add User</a></li>
+              <li><a class="dropdown-item" href="/clientapp/allusers/">All Users</a></li>
+          </ul>
+        </li>
+        {% endif %}
+
+      </ul>
+
+      <form method="post" action="{% url 'logout' %}" class="d-flex">
+        {% csrf_token %}
+        <button class="btn btn-outline-danger btn-sm" type="submit">Logout</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5 pt-3">
+  {% block content %}
+  <div class="text-center mt-5">
+    <h1 class="display-6" style="font-family: stencil;">WELCOME TO CLIENT MONITORING SYSTEM</h1>
+  </div>
+  {% endblock %}
+</div>
+
+</body>
+</html>
+

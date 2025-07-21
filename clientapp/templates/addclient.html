@@ -1,0 +1,168 @@
+{% extends "home.html" %}
+
+{% block title %}{% if client %}Edit Client{% else %}Add Client{% endif %} | Client Monitoring System{% endblock %}
+
+{% block content %}
+  <style>
+    .form-container {
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .form-row label {
+      flex: 1;
+      font-weight: bold;
+    }
+
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      flex: 2;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-buttons {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .form-buttons button {
+      padding: 10px 20px;
+      border: none;
+      margin-right: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .cancel-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .checkbox-group label {
+      margin-left: 8px;
+      font-weight: normal;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  </style>
+
+  <div class="form-container">
+    <form method="post" action="{% if client %}{% url 'edit_client' client.id %}{% else %}{% url 'addclients' %}{% endif %}">
+      {% csrf_token %}
+      <h2>{% if client %}Edit Client{% else %}Add Client{% endif %}</h2>
+
+      <div class="form-row">
+        <label for="client_name">Client Name:</label>
+        <input type="text" id="client_name" name="client_name" value="{{ client.client_name|default:'' }}" required>
+      </div>
+
+      <div class="form-row">
+        <label for="contact_name">Contact Name:</label>
+        <input type="text" id="contact_name" name="contact_name" value="{{ client.contact_name|default:'' }}" required>
+      </div>
+
+      <div class="form-row">
+        <label for="client_code">Client Code:</label>
+        <input type="text" id="client_code" name="client_code" value="{{ client.client_code|default:'' }}" required>
+      </div>
+
+      <div class="form-row">
+        <label for="contact_number">Contact Number:</label>
+        <input type="text" id="contact_number" name="contact_number" value="{{ client.contact_number|default:'' }}" required>
+      </div>
+
+      <div class="form-row">
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" value="{{ client.address|default:'' }}" required>
+      </div>
+
+      <div class="form-row">
+        <label for="url">Website URL:</label>
+        <input type="url" id="url" name="url" value="{{ client.url|default:'' }}">
+      </div>
+      <div class="form-row">
+		<label for="additional_link">Additional URL:</label>
+		<input type="url" id="additional_link" name="additional_link" value="{{ client.additional_link }}">
+	  </div>
+	  
+
+      <div class="form-row">
+        <label for="login_id">Login ID:</label>
+        <input type="text" id="login_id" name="login_id" value="{{ client.login_id|default:'' }}" required>
+      </div>
+
+      <div class="form-row">
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" value="{{ client.password|default:'' }}" required>
+      </div>
+
+      <div class="form-row">
+        <label for="has_branches">Has Branches:</label>
+        <div class="checkbox-group">
+          <input type="checkbox" id="has_branches" name="has_branches" {% if client and client.has_branches %}checked{% endif %}>
+          <label for="has_branches">Yes</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="strength">Strength:</label>
+        <input type="number" id="strength" name="strength" value="{{ client.strength}}">
+      </div>
+
+      <div class="form-row">
+        <label for="payment_type">Payment Type:</label>
+        <select id="payment_type" name="payment_type" required>
+          <option value="">-- Select --</option>
+          <option value="fixed" {% if client.payment_type == 'fixed' %}selected{% endif %}>Fixed</option>
+          <option value="per_student" {% if client.payment_type == 'per_student' %}selected{% endif %}>Per Student</option>
+          <option value="custom" {% if client.payment_type == 'custom' %}selected{% endif %}>Custom</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="unit_amount">Unit Amount:</label>
+        <input type="number" id="unit_amount" name="unit_amount" step="0.01" value="{{ client.unit_amount|default:'' }}" required>
+      </div>
+
+      <div class="form-row">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="3">{{ client.description|default:'' }}</textarea>
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" class="submit-btn">{% if client %}Submit{% else %}Submit{% endif %}</button>
+        <button type="button" class="cancel-btn" onclick='document.location.href="/clientapp/allclients"'>Cancel</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
